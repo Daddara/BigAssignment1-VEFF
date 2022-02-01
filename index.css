@@ -15,10 +15,19 @@
 }
 
 #nes-cartridge {
-    position: absolute;
+    /* position: absolute; */
+    margin-left: 100px;
     height: 100px;
     width: 100px;
     left: 300px;
     bottom: 0px;
     background-color: red; 
+}
+
+.form{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    justify-content:center;
+    background-color: aqua;
+    align-items: center;
 }
