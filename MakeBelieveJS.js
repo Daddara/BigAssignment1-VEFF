@@ -79,7 +79,7 @@
     }
 
     MakeBelieveJS.prototype.prepend = function(string){
-        console.log("We are in ble: ", string);
+        // console.log("We are in ble: ", string);
         if(typeof string == "string"){
             // <></> elem inserted here
             this.elems[0].innerHTML = string + this.elems[0].innerHTML;
@@ -90,6 +90,72 @@
         }
         return this;
     }
+
+    MakeBelieveJS.prototype.ajax = function(arg){
+        if(!arg.method){
+            arg.method = "GET";
+        }
+        if(!arg.timeout){
+            arg.timeout = 0;
+        }
+        if(!arg.data){
+            arg.data = {}
+        }
+        if(!arg.headers){
+            arg.headers = {}
+        }
+        if(!arg.success){
+            arg.success = null;
+        }
+        if(!arg.fail){
+            arg.fail = null;
+        }
+        if(!arg.beforeSend){
+            arg.beforeSend = null;
+        }
+        console.log(arg);
+
+        var HTTPrequest = new XMLHttpRequest();
+        HTTPrequest.open(arg.method, arg.url);
+        if ( arg.headers == true ) { 
+            for (var i = 0; i < arg.headers.length; i++) {
+                HTTPrequest.setRequestHeader( arg.headers[i][0], arg.headers[i][1] );
+            }
+        }
+        // if ( arg.data  !== {} ) {
+        //     HTTPrequest.data(arg.data);
+        // }
+        if(arg.timeout !== 0){
+            HTTPrequest.timeout = arg.timeout * 1000;
+        }
+        HTTPrequest.addEventListener("timeout", function(e) {
+            // ...
+            console.log("Boring");
+        });
+        
+        HTTPrequest.send(arg.data);
+        
+        HTTPrequest.onreadystatechange = function(){
+            console.log(HTTPrequest.response);
+            if ( HTTPrequest.status == 200 && arg.success && HTTPrequest.readyState == XMLHttpRequest.DONE ) {
+                //console.log('Status = 200');
+                arg.success( HTTPrequest.response );
+            }
+
+            else if ( HTTPrequest.status != 200 && HTTPrequest.readyState == XMLHttpRequest.DONE && arg.fail ) {
+                
+                arg.fail( HTTPrequest.response );
+            }
+
+            else if( HTTPrequest.readyState == XMLHttpRequest.HEADERS_RECEIVED && arg.beforeSend ) {
+                
+                arg.beforeSend( HTTPrequest.response );
+            }
+        }
+        return this;
+        }
+
+    
 
     function input(html) {
         var inputs = document.querySelectorAll(html);
@@ -126,3 +192,30 @@ __(".the-prepender").prepend(
             document.createTextNode("I am a special pretended paragraph!")
         )
 );
+
+__ = __("body");
+
+__.ajax({
+    url: 'https://serene-island-81305.herokuapp.com/api/200',
+    method: 'GET',
+    timeout: 10,
+    data: {},
+    headers: [
+        {'Authorization': 'my-secret-key'}
+    ],
+    success: function (resp){
+        // Triggered when there is a successful response from the server
+        console.log("SUCCESS");
+        console.log(resp);
+    },
+    fail: function (error){
+        // Triggered when an error occured when connecting to the server
+        console.log("ERROR");
+        console.log(err);
+    },
+    beforeSend: function(xhr){
+        // Triggered before the request and is passed in the XMLHttpRequest object
+        console.log("BEFORE");
+        console.log(xhr);
+    }
+})
