@@ -1,8 +1,7 @@
 (function(globalObj){
 
     function MakeBelieveJS(elems) {
-        console.log(elems);
-        console.log("lal")
+        // console.log(elems);
         this.elems = elems;
     };
 
@@ -59,6 +58,7 @@
         var ancestor
         for (let element of this.elems) {
             parent = element.parentNode
+
             while (parent !== null) {
                 if (parent == query) {
                     ancestor = parent
@@ -71,7 +71,10 @@
                 }
             }
         }
-        return ancestor
+        var list = []
+        list.pushToList(ancestor)
+        // console.log(list)
+        return new MakeBelieveJS(list);
     };
 //11
 MakeBelieveJS.prototype.delete = function(){
@@ -95,7 +98,6 @@ MakeBelieveJS.prototype.onInput = function (evt){
 }
     function input(html) {
         var inputs = document.querySelectorAll(html);
-        console.log(inputs);
         return new MakeBelieveJS(inputs);
 };
 
@@ -114,6 +116,14 @@ globalObj.__ =  input;
 
 // var ancestor = __("#child").ancestor("#ancestor");
 // console.log(ancestor);
+
+// var ancestor = __("#child").grandParent("#ancestor");
+// console.log(ancestor.elems);
+
+// __("#child").grandParent().delete();
+__("#child").ancestor("#ancestor").delete();
+console.log(__("#child").ancestor("#ancestor"));
+console.log(__("#child").ancestor("#ancestor"));
 
 // __("#myform").onSubmit(function(evt){
 //     alert("jaja");
