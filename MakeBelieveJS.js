@@ -2,6 +2,7 @@
 
     function MakeBelieveJS(elems) {
         console.log(elems);
+        console.log("lal")
         this.elems = elems;
     };
 
@@ -51,7 +52,47 @@
         return {};
     }
 }
-
+//6
+    MakeBelieveJS.prototype.ancestor = function(string){
+        var query = document.querySelector(string)
+        var parent
+        var ancestor
+        for (let element of this.elems) {
+            parent = element.parentNode
+            while (parent !== null) {
+                if (parent == query) {
+                    ancestor = parent
+                }
+                if (parent.parentNode === null) {
+                    parent = null;
+                }
+                else {
+                    parent = parent.parentNode
+                }
+            }
+        }
+        return ancestor
+    };
+//11
+MakeBelieveJS.prototype.delete = function(){
+    var deleteElement = this.elems[0];
+    if (deleteElement){
+        deleteElement.parentNode.removeChild(deleteElement)
+    }
+    return this;
+};
+//15
+MakeBelieveJS.prototype.onSubmit = function (evt){
+    this.elems[0].addEventListener("submit", evt)
+};
+//16
+MakeBelieveJS.prototype.onInput = function (evt){
+    var i;
+    for(i=0;i < this.elems.length; i++){
+        this.elems[i].addEventListener("input",evt)
+    }
+    
+}
     function input(html) {
         var inputs = document.querySelectorAll(html);
         console.log(inputs);
@@ -64,9 +105,19 @@ globalObj.__ =  input;
 
 // console.log(window);
 
-var my_inputs = __("#my-form input");
-console.log(my_inputs);
+// var my_inputs = __("#my-form input");
+// console.log(my_inputs);
 
-__("input").parent("form").parent();
-// var hello = __(".container").parent();
-var grandParent = __("#password").grandParent(".formdiv");
+// __("input").parent("form").parent();
+// // var hello = __(".container").parent();
+// var grandParent = __("#password").grandParent(".formdiv");
+
+// var ancestor = __("#child").ancestor("#ancestor");
+// console.log(ancestor);
+
+// __("#myform").onSubmit(function(evt){
+//     alert("jaja");
+// });
+// __("#myform").onInput(function(evt){
+//      console.log(event.data);
+//  });
