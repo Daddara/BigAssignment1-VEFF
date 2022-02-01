@@ -31,3 +31,19 @@
     background-color: aqua;
     align-items: center;
 }
+
+#paragraph{
+    background-color: brown;
+    font-size: 4em;
+    font-weight: bold;
+    width: 100%;
+    height: 20%;
+}
+
+.the-appender{
+    background-color: blueviolet;
+}
+
+.the-prepender{
+    background-color: coral;
+}
