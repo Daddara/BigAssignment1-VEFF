@@ -6,11 +6,23 @@ function MakeBelieveJS(elems) {
     // return hehe;l
 };
 
-MakeBelieveJS.prototype.parent = function() {
+MakeBelieveJS.prototype.parent = function(string) {
+    let parentList = [];
+    for(let i = 0; i < this.elems.length; i++){
+        if(string === "" || string === null){
+            parentList.push(this.elems[i].parentNode);
+        }
+        else{
+            if(this.elems[i].parentNode.matches(string)){
+                parentList.push(this.elems[i].parentNode);
+            }
+        }
+    }
+    console.log(parentList);
     console.log(this.elems);
-    var hello = this.elems[0].parentNode;
+    // var parent = this.elems[0].parentNode;
     console.log("Inside Parent");
-    console.log(hello);
+    return parentList;
 };
 
 function input(html) {
@@ -23,10 +35,10 @@ globalObj.__ =  input;
 
 })(window);
 
-console.log(window);
+// console.log(window);
 
+// var my_inputs = __("#my-form input");
+// console.log(my_inputs);
 
-var tv = __(".container div");
-console.log(tv);
-
-var hello = __(".container").parent();
+__("input").parent("form");
+// var hello = __(".container").parent();
