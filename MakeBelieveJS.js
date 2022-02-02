@@ -1,7 +1,6 @@
 (function(globalObj){
 
     function MakeBelieveJS(elems) {
-        // console.log(elems);
         this.elems = elems;
     };
 
@@ -11,6 +10,7 @@
         }
     }
 
+    // 4
     MakeBelieveJS.prototype.parent = function(string) {
         let parentList = [];
         console.log("STUPID SHIT HERE: ",this.elems);
@@ -26,11 +26,11 @@
         }
         console.log(parentList);
         console.log(this.elems);
-        // var parent = this.elems[0].parentNode;
         console.log("Inside Parent");
         return new MakeBelieveJS(parentList);
     };
 
+    // 5
     MakeBelieveJS.prototype.grandParent = function(string){
         console.log("GRANDPAPA!!!!");
         for(var i = 0; i < this.elems.length; i++){
@@ -49,37 +49,68 @@
                 }
         }
         return {};
+        }
     }
-}
 
+    //6
+    MakeBelieveJS.prototype.ancestor = function(string){
+        var query = document.querySelector(string);
+        var parent;
+        var ancestor;
+        for (let element of this.elems) {
+            parent = element.parentNode;
+
+            while (parent !== null) {
+                if (parent == query) {
+                    ancestor = parent;
+                }
+                if (parent.parentNode === null) {
+                    parent = null;
+                }
+                else {
+                    parent = parent.parentNode;
+                }
+            }
+        }
+        var list = [];
+        list.pushToList(ancestor);
+        console.log("THE ANCESTOR LIST: ", list);
+        return new MakeBelieveJS(list);
+    };
+
+      //7
+    MakeBelieveJS.prototype.onClick = function(evt){
+        console.log("check: ", this.elems);
+        for (var i = 0; i < this.elems.length; i++) {
+            this.elems[i].addEventListener("click", evt); 
+        
+        }
+    }
+
+    // 8
     MakeBelieveJS.prototype.insertText = function(text){
-        // console.log("Inside text: ", text);
-        // console.log(this.elems);
         for(var i = 0; i < this.elems.length; i++){
             this.elems[i].textContent = text;
         }
         return this;
-        // this.elems[0].textContent = text;
         
     }
 
+    // 9
     MakeBelieveJS.prototype.append = function(string){
         if(typeof string == "string"){
             // <></> elem inserted here
-            // console.log("This is of type string: ", string);
             this.elems[0].innerHTML = this.elems[0].innerHTML + string;
         }
         else{
             // createElememt here
-            // console.log("Not of type string: ", string);
             this.elems[0].appendChild(string.parentNode);
-            // console.log(string.parentNode);
         }
         return this;
     }
 
+    // 10
     MakeBelieveJS.prototype.prepend = function(string){
-        // console.log("We are in ble: ", string);
         if(typeof string == "string"){
             // <></> elem inserted here
             this.elems[0].innerHTML = string + this.elems[0].innerHTML;
@@ -91,11 +122,21 @@
         return this;
     }
 
-    //Helper function for attaching the  syntax the the MakeBelieve object
-var attachMakeBelieve = function (query) {
-    return new MakeBelieveJS(document.querySelectorAll(query));
-};
+    // 11
+    MakeBelieveJS.prototype.delete = function(){
+        var deleteElement = this.elems[0];
+        if (deleteElement){
+            deleteElement.parentNode.removeChild(deleteElement)
+        }
+        return this;
+    };
 
+    //Helper function for attaching the  syntax the the MakeBelieve object
+    var attachMakeBelieve = function (query) {
+        return new MakeBelieveJS(document.querySelectorAll(query));
+    };
+
+    // 12
     attachMakeBelieve.ajax = function(arg){
         if(!arg.method){
             arg.method = "GET";
@@ -127,9 +168,7 @@ var attachMakeBelieve = function (query) {
                 HTTPrequest.setRequestHeader( arg.headers[i][0], arg.headers[i][1] );
             }
         }
-        // if ( arg.data  !== {} ) {
-        //     HTTPrequest.data(arg.data);
-        // }
+
         if(arg.timeout !== 0){
             console.log("TIMEOUT!");
             HTTPrequest.timeout = arg.timeout * 1000;
@@ -155,76 +194,64 @@ var attachMakeBelieve = function (query) {
         HTTPrequest.send(arg.data);
         return this;
         }
-
     
+    //13
+    MakeBelieveJS.prototype.css = function(element, value) {
+        for (var i = 0; i < this.elems.length; i++) {
+            this.elems[i].style[element] = value;
+            return new MakeBelieveJS(this);
+        }
+    }
 
-//     function input(html) {
-//         var inputs = document.querySelectorAll(html);
-//         console.log(inputs);
-//         return new MakeBelieveJS(inputs);
-// };
-
-
-
-globalObj.__ =  attachMakeBelieve;
-//6
-    MakeBelieveJS.prototype.ancestor = function(string){
-        var query = document.querySelector(string)
-        var parent
-        var ancestor
-        for (let element of this.elems) {
-            parent = element.parentNode
-
-            while (parent !== null) {
-                if (parent == query) {
-                    ancestor = parent
+     //14
+     MakeBelieveJS.prototype.toggleClass = function(target) {
+        var hello = this.elems[0].childNodes;
+        for(var i = 0; i < hello.length; i++){
+            if(hello[i].className == target){
+                var classElems = document.getElementsByClassName(target);
+                if(classElems[0].style.visibility ){
+                    if(classElems[0].style.visibility == "hidden"){
+                        for(var i = 0; i < classElems.length; i++){
+                            classElems[i].style.visibility = "visible";
+                        }
                 }
-                if (parent.parentNode === null) {
-                    parent = null;
+                else{
+                    for(var i = 0; i < classElems.length; i++){
+                        classElems[i].style.visibility = "hidden";
+                    }
                 }
-                else {
-                    parent = parent.parentNode
+                }
+                else{
+                    for(var i = 0; i < classElems.length; i++){
+                        classElems[i].style.visibility = "hidden";
+                    }
                 }
             }
         }
-        var list = []
-        list.pushToList(ancestor)
-        // console.log(list)
-        return new MakeBelieveJS(list);
-    };
-//11
-MakeBelieveJS.prototype.delete = function(){
-    var deleteElement = this.elems[0];
-    if (deleteElement){
-        deleteElement.parentNode.removeChild(deleteElement)
+        return this.elems[0];
     }
-    return this;
-};
-//15
-MakeBelieveJS.prototype.onSubmit = function (evt){
-    this.elems[0].addEventListener("submit", evt)
-};
-//16
-MakeBelieveJS.prototype.onInput = function (evt){
-    var i;
-    for(i=0;i < this.elems.length; i++){
-        this.elems[i].addEventListener("input",evt)
-    }
-    
-}
-    function input(html) {
-        var inputs = document.querySelectorAll(html);
-        return new MakeBelieveJS(inputs);
-};
 
-globalObj.__ =  input;
+
+    //15
+    MakeBelieveJS.prototype.onSubmit = function (evt){
+        this.elems[0].addEventListener("submit", evt);
+    };
+    //16
+    MakeBelieveJS.prototype.onInput = function (evt){
+        var i;
+        for(i=0;i < this.elems.length; i++){
+            this.elems[i].addEventListener("input",evt);
+        }
+    
+    }
+globalObj.__ =  attachMakeBelieve;
 
 })(window);
 
 // console.log(window);
 
 var my_inputs = __("#my-form input");
-console.log(my_inputs);
+// console.log(my_inputs);
 
 __("input").parent("form").parent();
 // var hello = __(".container").parent();
@@ -286,7 +313,7 @@ __.ajax({
 // console.log(ancestor.elems);
 
 // __("#child").grandParent().delete();
-__("#child").ancestor("#ancestor").delete();
+__("#child").ancestor("#ancestor");
 console.log(__("#child").ancestor("#ancestor"));
 console.log(__("#child").ancestor("#ancestor"));
 
@@ -296,3 +323,16 @@ console.log(__("#child").ancestor("#ancestor"));
 // __("#myform").onInput(function(evt){
 //      console.log(event.data);
 //  });
+
+//7
+__('#password').onClick (function (evt) {
+    console.log("test 7: ", evt.target.value);});
+
+//13
+__('#television').css('background-color', 'black');
+
+
+//14
+__('.formdiv').toggleClass('form');
+__('.formdiv').toggleClass('form');
+// __('.formdiv').toggleClass('form');
