@@ -91,7 +91,12 @@
         return this;
     }
 
-    MakeBelieveJS.prototype.ajax = function(arg){
+    //Helper function for attaching the  syntax the the MakeBelieve object
+var attachMakeBelieve = function (query) {
+    return new MakeBelieveJS(document.querySelectorAll(query));
+};
+
+    attachMakeBelieve.ajax = function(arg){
         if(!arg.method){
             arg.method = "GET";
         }
@@ -126,54 +131,52 @@
         //     HTTPrequest.data(arg.data);
         // }
         if(arg.timeout !== 0){
+            console.log("TIMEOUT!");
             HTTPrequest.timeout = arg.timeout * 1000;
         }
-        HTTPrequest.addEventListener("timeout", function(e) {
-            // ...
-            console.log("Boring");
-        });
-        
-        HTTPrequest.send(arg.data);
         
         HTTPrequest.onreadystatechange = function(){
-            console.log(HTTPrequest.response);
-            if ( HTTPrequest.status == 200 && arg.success && HTTPrequest.readyState == XMLHttpRequest.DONE ) {
-                //console.log('Status = 200');
+            if ( HTTPrequest.status == 200 && arg.success && HTTPrequest.readyState == HTTPrequest.DONE ) {
+                console.log("Status = 200");
                 arg.success( HTTPrequest.response );
             }
 
-            else if ( HTTPrequest.status != 200 && HTTPrequest.readyState == XMLHttpRequest.DONE && arg.fail ) {
-                
+            else if ( HTTPrequest.status != 200 && HTTPrequest.readyState == HTTPrequest.DONE && arg.fail ) {
+                console.log("Status = Fail");
                 arg.fail( HTTPrequest.response );
             }
 
-            else if( HTTPrequest.readyState == XMLHttpRequest.HEADERS_RECEIVED && arg.beforeSend ) {
-                
+            else if( HTTPrequest.readyState == HTTPrequest.HEADERS_RECEIVED && arg.beforeSend ) {
+                console.log("Status = Before hehe");
                 arg.beforeSend( HTTPrequest.response );
             }
         }
+
+        HTTPrequest.send(arg.data);
         return this;
         }
 
     
 
-    function input(html) {
-        var inputs = document.querySelectorAll(html);
-        console.log(inputs);
-        return new MakeBelieveJS(inputs);
-};
+//     function input(html) {
+//         var inputs = document.querySelectorAll(html);
+//         console.log(inputs);
+//         return new MakeBelieveJS(inputs);
+// };
 
-globalObj.__ =  input;
+
+
+globalObj.__ =  attachMakeBelieve;
 
 })(window);
 
 // console.log(window);
 
 var my_inputs = __("#my-form input");
-// console.log(my_inputs);
+console.log(my_inputs);
 
-// __("input").parent("form").parent();
-// // var hello = __(".container").parent();
+__("input").parent("form").parent();
+// var hello = __(".container").parent();
 // var grandParent = __("#password").grandParent(".formdiv");
 __("#paragraph").insertText("Suck my dick!");
 
@@ -193,7 +196,6 @@ __(".the-prepender").prepend(
         )
 );
 
-__ = __("body");
 
 __.ajax({
     url: 'https://serene-island-81305.herokuapp.com/api/200',
@@ -211,7 +213,7 @@ __.ajax({
     fail: function (error){
         // Triggered when an error occured when connecting to the server
         console.log("ERROR");
-        console.log(err);
+        console.log(error);
     },
     beforeSend: function(xhr){
         // Triggered before the request and is passed in the XMLHttpRequest object
