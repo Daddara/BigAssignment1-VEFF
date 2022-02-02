@@ -163,11 +163,15 @@
 
         var HTTPrequest = new XMLHttpRequest();
         HTTPrequest.open(arg.method, arg.url);
-        if ( arg.headers == true ) { 
+        if ( JSON.stringify(arg.headers) != '{}' ) { 
+            console.log("HEADERS!!!! ", arg.headers);
             for (var i = 0; i < arg.headers.length; i++) {
-                HTTPrequest.setRequestHeader( arg.headers[i][0], arg.headers[i][1] );
-            }
+                for (const [key, value] of Object.entries(arg.headers[i])) {
+                    HTTPrequest.setRequestHeader( key, value);
+                    }
+                }
         }
+        console.log(HTTPrequest.headers);
 
         if(arg.timeout !== 0){
             console.log("TIMEOUT!");
@@ -177,10 +181,24 @@
         HTTPrequest.onreadystatechange = function(){
             if ( HTTPrequest.status == 200 && arg.success && HTTPrequest.readyState == HTTPrequest.DONE ) {
                 console.log("Status = 200");
+                console.log(HTTPrequest.response);
+                arg.success( HTTPrequest.response );
+            }
+            else if ( HTTPrequest.status == 201 && arg.success && HTTPrequest.readyState == HTTPrequest.DONE ) {
+                console.log("Status = 201");
+                arg.success( HTTPrequest.response );
+            }
+            else if ( HTTPrequest.status == 202 && arg.success && HTTPrequest.readyState == HTTPrequest.DONE ) {
+                console.log("Status = 202");
+                arg.success( HTTPrequest.response );
+            }
+            else if ( HTTPrequest.status == 204 && arg.success && HTTPrequest.readyState == HTTPrequest.DONE ) {
+                console.log("Status = 204");
                 arg.success( HTTPrequest.response );
             }
 
-            else if ( HTTPrequest.status != 200 && HTTPrequest.readyState == HTTPrequest.DONE && arg.fail ) {
+            else if ( HTTPrequest.readyState == HTTPrequest.DONE && arg.fail ) {
+                console.log(HTTPrequest.status);
                 console.log("Status = Fail");
                 arg.fail( HTTPrequest.response );
             }
@@ -236,11 +254,12 @@
     MakeBelieveJS.prototype.onSubmit = function (evt){
         this.elems[0].addEventListener("submit", evt);
     };
+
     //16
     MakeBelieveJS.prototype.onInput = function (evt){
         var i;
         for(i=0;i < this.elems.length; i++){
-            this.elems[i].addEventListener("input",evt);
+            this.elems[i].addEventListener("input", evt);
         }
     
     }
@@ -280,9 +299,9 @@ __.ajax({
     method: 'GET',
     timeout: 10,
     data: {},
-    headers: [
-        {'Authorization': 'my-secret-key'}
-    ],
+    // headers: [
+    //     {'Authorization': 'my-secret-key'}
+    // ],
     success: function (resp){
         // Triggered when there is a successful response from the server
         console.log("SUCCESS");
@@ -317,9 +336,9 @@ __("#child").ancestor("#ancestor");
 console.log(__("#child").ancestor("#ancestor"));
 console.log(__("#child").ancestor("#ancestor"));
 
-// __("#myform").onSubmit(function(evt){
-//     alert("jaja");
-// });
+__("#myform").onSubmit(function(evt){
+    alert("jaja");
+});
 // __("#myform").onInput(function(evt){
 //      console.log(event.data);
 //  });
