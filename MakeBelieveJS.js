@@ -13,7 +13,6 @@
     // 4
     MakeBelieveJS.prototype.parent = function(string) {
         let parentList = [];
-        console.log("STUPID SHIT HERE: ",this.elems);
         for(var i = 0; i < this.elems.length; i++){
             if(!string){
                 parentList.pushToList(this.elems[i].parentNode);
@@ -24,27 +23,21 @@
                 }
             }
         }
-        console.log(parentList);
-        console.log(this.elems);
-        console.log("Inside Parent");
         return new MakeBelieveJS(parentList);
     };
 
     // 5
     MakeBelieveJS.prototype.grandParent = function(string){
-        console.log("GRANDPAPA!!!!");
         for(var i = 0; i < this.elems.length; i++){
             if(!string){
                 var parentOfElem = this.elems[i].parentNode;
                 var grandParentElem = parentOfElem.parentNode;
-                console.log("GOT GRANPA HERE: ", grandParentElem);
                 return new MakeBelieveJS(grandParentElem);
             }
             else{
                 if(this.elems[i].parentNode.parentNode.matches(string)){
                     var parentOfElem = this.elems[i].parentNode;
                     var grandParentElem = parentOfElem.parentNode;
-                    console.log("GOT GRANPA HERE: ", grandParentElem);
                     return new MakeBelieveJS(grandParentElem);
                 }
         }
@@ -74,13 +67,11 @@
         }
         var list = [];
         list.pushToList(ancestor);
-        console.log("THE ANCESTOR LIST: ", list);
         return new MakeBelieveJS(list);
     };
 
       //7
     MakeBelieveJS.prototype.onClick = function(evt){
-        console.log("check: ", this.elems);
         for (var i = 0; i < this.elems.length; i++) {
             this.elems[i].addEventListener("click", evt); 
         
@@ -163,8 +154,7 @@
 
         var HTTPrequest = new XMLHttpRequest();
         HTTPrequest.open(arg.method, arg.url);
-        if ( JSON.stringify(arg.headers) != '{}' ) { 
-            console.log("HEADERS!!!! ", arg.headers);
+        if ( JSON.stringify(arg.headers) != '{}' ) {
             for (var i = 0; i < arg.headers.length; i++) {
                 for (const [key, value] of Object.entries(arg.headers[i])) {
                     HTTPrequest.setRequestHeader( key, value);
@@ -204,7 +194,6 @@
             }
 
             else if( HTTPrequest.readyState == HTTPrequest.HEADERS_RECEIVED && arg.beforeSend ) {
-                console.log("Status = Before hehe");
                 arg.beforeSend( HTTPrequest.response );
             }
         }
